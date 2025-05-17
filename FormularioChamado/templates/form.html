@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Formulário CEMIG</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <header class="epr">
+    <div class="position-relative text-center my-4">
+      <img src="{{ url_for('static', filename='img/logo_max.png') }}"
+        alt="Logo da empresa"
+        class="position-absolute top-0 start-0 img-fluid logo-empresa ms-3 mt-2">
+      <h2 class="mb-0">Formulário de acompanhamento de chamado da CEMIG</h2>
+      <button id="admin-btn" class="btn btn-dark" style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
+        Administração
+      </button>
+      <div id="admin-modal" class="admin-overlay">
+        <div class="admin-content">
+          <h3>Área Administrativa</h3>
+          <ul>
+            <li><a href="{{ url_for('lista_chamados') }}">Listar Chamados</a></li>
+            <!-- <li><a href="{{ url_for('exportar_todos') }}">Exportar Todos</a></li> -->
+            <!-- você pode colocar mais links aqui -->
+          </ul>
+          <button id="close-admin" class="btn btn-secondary">Fechar</button>
+        </div>
+    </div>
+  </header>
+
+  <main class="epr_conteudo">
+    <div class="container my-5">
+      {% if success %}
+      <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert" style="opacity: 0;">
+        Registro enviado com sucesso!
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+      </div>
+      {% endif %}
+
+      <form method="POST" action="/" class="row g-3" id="formChamado">
+        <div class="col-md-6">
+          <label for="chamado" class="form-label">Número do chamado</label>
+          <input type="text" class="form-control" id="chamado" name="chamado" required />
+        </div>
+  
+        <div class="col-md-6">
+          <label for="localicade" class="form-label">Localicade</label>
+          <select class="form-select" id="localicade" name="localicade" required>
+            <option value="" disabled selected>Selecione</option>
+            <option value="PP - 01">PP - 01</option>
+            <option value="PP - 10">PP - 10</option>
+            <option value="PP - 11">PP - 11</option>
+            <option value="BSO - 01">BSO - 01</option>
+            <option value="SAU - 18">SAU - 18</option>
+            <option value="SAU - 19">SAU - 19</option>
+            <option value="SAU - 20">SAU - 20</option>
+            <option value="SAU - 21">SAU - 21</option>
+            <option value="Balança  Carandaí">Balança  Carandaí</option>
+            <option value="RPT - 13">RPT - 13</option>
+            <option value="RPT - 14">RPT - 14</option>
+            <option value="RPT - 15">RPT - 15</option>
+            <option value="RPT - 16">RPT - 16</option>
+            <option value="RPT - 18">RPT - 18</option>
+            <option value="RPT- 17Corr almeida">RPT- 17Corr almeida</option>
+            <option value="RDATA 14.1">RDATA 14.1</option>
+            <option value="RDATA 14.2">RDATA 14.2</option>
+            <option value="RDATA 14.3">RDATA 14.3</option>
+            <option value="RDATA 16.1">RDATA 16.1</option>
+            <option value="RDATA 17">RDATA 17</option>
+            <option value="RDATA 18">RDATA 18</option>
+            <option value="RDATA - PP10">RDATA - PP10</option>
+            <option value="PMV - 07">PMV - 07</option>
+            <option value="PMV - 08">PMV - 08</option>
+            <option value="PMV - 09">PMV - 09</option>
+          </select>
+        </div>
+  
+        <div class="col-md-6">
+          <label for="estabelecimento" class="form-label">Estabelecimento</label>
+          <input type="text" class="form-control" id="estabelecimento" name="estabelecimento" required />
+        </div>
+  
+        <div class="col-md-6">
+          <label for="n_medidor" class="form-label">N° Medidor</label>
+          <input type="text" class="form-control" id="n_medidor" name="n_medidor" required />
+        </div>
+  
+        <div class="col-md-6">
+          <label for="uc_instalacao" class="form-label">UC/Instalação</label>
+          <input type="text" class="form-control" id="uc_instalacao" name="uc_instalacao" required />
+        </div>
+  
+        <div class="col-md-6">
+          <label for="medidor_atual" class="form-label">Medidor Atual</label>
+          <input type="text" class="form-control" id="medidor_atual" name="medidor_atual" required />
+        </div>
+
+        <div class="col-md-6">
+          <label for="descricao" class="form-label">Descrição</label>
+          <textarea class="form-control" id="descricao" name="descricao" rows="3" placeholder="Descreva detalhes da localicade"></textarea>
+        </div>
+  
+        <div class="col-12 text-center">
+          <button type="submit" class="btn btn-primary px-5">Enviar</button>
+        </div>
+      </form>
+
+      <hr class="my-5" />
+      <h2 class="text-center">Lista de Chamados Registrados</h2>
+
+      <div class="mb-3">
+        <label for="filtroChamado" class="form-label" >Filtrar por número:</label>
+        <select id="filtroChamado" class="form-select" onchange="filtrarChamado()">
+          <option value="" selected disabled>Selecione uma localicade</option>
+          {% for num in chamados_unicos %}
+          <option value="{{ num }}">{{ num }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped" id="tabelaChamados">
+          <thead class="table-success">
+            <tr>
+              <th>Chamado</th>
+              <th>Data/Hora</th>
+              <th>Localicade</th>
+              <th>Estabelecimento</th>
+              <th>N° Medidor</th>
+              <th>UC/Instalação</th>
+              <th>Medidor Atual</th>
+              <th>Descrição</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in chamados %}
+            <tr data-chamado="{{ c.chamado }}">
+              <td>{{ c.chamado or "" }}</td>
+              <td>{{ c.data_hora or "" }}</td>
+              <td>{{ c.localicade or "" }}</td>
+              <td>{{ c.estabelecimento or "" }}</td>
+              <td>{{ c.n_medidor or "" }}</td>
+              <td>{{ c.uc_instalacao or "" }}</td>
+              <td>{{ c.medidor_atual or "" }}</td>
+              <td>{{ c.descricao or "" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer class="text-center py-3">
+    <span class="text-muted">Grupo EPR <br> Via Mineira <br> © {{ now.year }}</span>
+  </footer>
+
+  <div id="loading-overlay">
+    <div class="spinner-border text-primary" role="status" style="width: 4rem; height: 4rem;">
+      <span class="visually-hidden">Carregando...</span>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const linhas = document.querySelectorAll('#tabelaChamados tbody tr');
+      linhas.forEach(linha => {
+        linha.style.display = 'none';
+      });
+    
+      const alert = document.getElementById('success-alert');
+      if (alert) {
+        alert.style.opacity = 1;
+        setTimeout(() => {
+          alert.style.transition = "opacity 1s ease";
+          alert.style.opacity = 0;
+          setTimeout(() => alert.remove(), 1000);
+        }, 4000);
+      }
+    });
+
+    function filtrarChamado() {
+      const filtro = document.getElementById('filtroChamado').value;
+      const linhas = document.querySelectorAll('#tabelaChamados tbody tr');
+    
+      linhas.forEach(linha => {
+        const chamado = linha.getAttribute('data-chamado');
+        if (filtro && chamado === filtro) {
+          linha.style.display = '';
+        } else {
+          linha.style.display = 'none';
+        }
+      });
+    }
+
+    document.getElementById("admin-btn").addEventListener("click", function () {
+      document.getElementById("admin-modal").style.display = "block";
+    });
+    
+    document.getElementById("close-admin").addEventListener("click", function () {
+      document.getElementById("admin-modal").style.display = "none";
+    });
+
+    const form = document.getElementById('formChamado');
+    const loading = document.getElementById('loading-overlay');
+    form.addEventListener('submit', () => {
+      loading.style.display = 'flex';
+    });
+  </script>
+</body>
+</html>

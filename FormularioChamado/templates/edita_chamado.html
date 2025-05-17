@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Chamado</title>
+</head>
+<body>
+    <h1>Editar Chamado</h1>
+    <form method="post">
+        <label for="chamado">Chamado:</label>
+        <input type="text" id="chamado" name="chamado" value="{{ chamado[0] }}" required><br>
+
+        <label for="localidade">Localidade:</label>
+        <input type="text" id="localidade" name="localidade" value="{{ chamado[2] }}" required><br>
+
+        <label for="estabelecimento">Estabelecimento:</label>
+        <input type="text" id="estabelecimento" name="estabelecimento" value="{{ chamado[3] }}" required><br>
+
+        <label for="n_medidor">N° Medidor:</label>
+        <input type="text" id="n_medidor" name="n_medidor" value="{{ chamado[4] }}" required><br>
+
+        <label for="uc">UC/Instalação:</label>
+        <input type="text" id="uc" name="uc" value="{{ chamado[5] }}" required><br>
+
+        <label for="medidor_atual">Medidor Atual:</label>
+        <input type="text" id="medidor_atual" name="medidor_atual" value="{{ chamado[6] }}" required><br>
+
+        <label for="descricao">Descrição:</label>
+        <input type="text" id="descricao" name="descricao" value="{{ chamado[7] }}" required><br><br>
+
+        <input type="submit" value="Salvar Alterações">
+    </form>
+    <br>
+    <a href="{{ url_for('lista_chamados') }}">Voltar</a>
+</body>
+</html>
+
