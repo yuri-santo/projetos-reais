@@ -2,48 +2,38 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8" />
-    <title>Listar Chamados</title>
-    <!-- Link para seu CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <title>Lista de Chamados</title>
 </head>
 <body>
-
-<h1>Lista de Chamados</h1>
-
-<table class="tabela-chamados">
-    <thead>
-        <tr>
-          <th>Chamado</th>
-          <th>Data/Hora</th>
-          <th>Localicade</th>
-          <th>Estabelecimento</th>
-          <th>N° Medidor</th>
-          <th>UC/Instalação</th>
-          <th>Medidor Atual</th>
-          <th>Descrição</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for chamado in chamados %}
-        <tr>
-          <td>{{ chamado.chamado or "" }}</td>
-          <td>{{ chamado.data_hora or "" }}</td>
-          <td>{{ chamado.localicade or "" }}</td>
-          <td>{{ chamado.estabelecimento or "" }}</td>
-          <td>{{ chamado.n_medidor or "" }}</td>
-          <td>{{ chamado.uc_instalacao or "" }}</td>
-          <td>{{ chamado.medidor_atual or "" }}</td>
-          <td>{{ chamado.descricao or "" }}</td>
-            <td>
-                <a href="{{ url_for('edita_chamado', chamado=chamado['chamado']) }}" class="btn-editar">Editar</a>
-
-            </td>
-        </tr>
-        {% else %}
-        <tr><td colspan="9">Nenhum chamado encontrado.</td></tr>
+    <h1>Lista de Chamados</h1>
+    <a href="{{ url_for('index') }}">Voltar ao formulário</a>
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Data/Hora</th>
+                <th>Chamado</th>
+                <th>Localidade</th>
+                <th>Nº Medidor</th>
+                <th>UC/Instalação</th>
+                <th>Medidor Atual</th>
+                <th>Descrição</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for c in chamados %}
+            <tr>
+                <td>{{ c.data_hora }}</td>
+                <td>{{ c.chamado }}</td>
+                <td>{{ c.localicade }}</td>
+                <td>{{ c.n_medidor }}</td>
+                <td>{{ c.uc_instalacao }}</td>
+                <td>{{ c.medidor_atual }}</td>
+                <td>{{ c.descricao }}</td>
+                <td>{{ c.status }}</td>
+            </tr>
         {% endfor %}
-    </tbody>
-</table>
-
+        </tbody>
+    </table>
 </body>
 </html>

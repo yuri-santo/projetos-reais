@@ -78,22 +78,75 @@
         </div>
   
         <div class="col-md-6">
-          <label for="estabelecimento" class="form-label">Estabelecimento</label>
-          <input type="text" class="form-control" id="estabelecimento" name="estabelecimento" required />
-        </div>
-  
-        <div class="col-md-6">
           <label for="n_medidor" class="form-label">N° Medidor</label>
-          <input type="text" class="form-control" id="n_medidor" name="n_medidor" required />
+          <select class="form-select" id="n_medidor" name="n_medidor" required>
+            <option value="" disabled selected>Selecione</option>
+            <option value="GMG126000404">GMG126000404</option>
+            <option value="GMI064000091">GMI064000091</option>
+            <option value="GMJ155000344">GMJ155000344</option>
+            <option value="ARC164006153">ARC164006153</option>
+            <option value="APD167055614">APD167055614</option>
+            <option value="CAA137000001">CAA137000001</option>
+            <option value="APD167028493">APD167028493</option>
+            <option value="APD159029525">APD159029525</option>
+            <option value="ARB145005973">ARB145005973</option>
+            <option value="APD159004232">APD159004232</option>
+            <option value="APD167055651">APD167055651</option>
+            <option value="AJK134033756">AJK134033756</option>
+            <option value="APC149056194">APC149056194</option>
+            <option value="APD159056317">APD159056317</option>
+            <option value="APD175093880">APD175093880</option>
+            <option value="APD142057967">APD142057967</option>
+            <option value="APD159025558">APD159025558</option>
+            <option value="APD159124025">APD159124025</option>
+            <option value="APD142013904">APD142013904</option>
+            <option value="APD159067285">APD159067285</option>
+            <option value="APD1590563227">APD1590563227</option>
+            <option value="APD159070514">APD159070514</option>
+            <option value="APD159095218">APD159095218</option>
+            <option value="APD159038825">APD159038825</option>
+            <option value="AJK134033824">AJK134033824</option>
+            <option value="AJK134032068">AJK134032068</option>
+          </select>
         </div>
   
         <div class="col-md-6">
           <label for="uc_instalacao" class="form-label">UC/Instalação</label>
-          <input type="text" class="form-control" id="uc_instalacao" name="uc_instalacao" required />
+          <select class="form-select" id="uc_instalacao" name="uc_instalacao" required>
+            <option value="" disabled selected>Selecione</option>
+            <option value="3003271107">3003271107</option>
+            <option value="3012424498">3012424498</option>
+            <option value="3012561397">3012561397</option>
+            <option value="3012569128">3012569128</option>
+            <option value="3012570697">3012570697</option>
+            <option value="3012573851">3012573851</option>
+            <option value="3012586666">3012586666</option>
+            <option value="3012588531">3012588531</option>
+            <option value="3012656251">3012656251</option>
+            <option value="3012667837">3012667837</option>
+            <option value="3012699982">3012699982</option>
+            <option value="3012712558">3012712558</option>
+            <option value="3012712647">3012712647</option>
+            <option value="3012724708">3012724708</option>
+            <option value="3012724735">3012724735</option>
+            <option value="3012724772">3012724772</option>
+            <option value="3012730204">3012730204</option>
+            <option value="3012740719">3012740719</option>
+            <option value="3012757198">3012757198</option>
+            <option value="3012795862">3012795862</option>
+            <option value="3012917317">3012917317</option>
+            <option value="3012926204">3012926204</option>
+            <option value="3012975588">3012975588</option>
+            <option value="3012991579">3012991579</option>
+            <option value="3013057398">3013057398</option>
+            <option value="3013190398">3013190398</option>
+            <option value="3013653187">3013653187</option>
+          </select>
         </div>
+
   
         <div class="col-md-6">
-          <label for="medidor_atual" class="form-label">Medidor Atual</label>
+          <label for="medidor_atual" class="form-label">Responsavel pela ligação</label>
           <input type="text" class="form-control" id="medidor_atual" name="medidor_atual" required />
         </div>
 
@@ -127,10 +180,9 @@
               <th>Chamado</th>
               <th>Data/Hora</th>
               <th>Localicade</th>
-              <th>Estabelecimento</th>
               <th>N° Medidor</th>
               <th>UC/Instalação</th>
-              <th>Medidor Atual</th>
+              <th>Responsavel pela ligação</th>
               <th>Descrição</th>
             </tr>
           </thead>
@@ -157,11 +209,10 @@
     <span class="text-muted">Grupo EPR <br> Via Mineira <br> © {{ now.year }}</span>
   </footer>
 
-  <div id="loading-overlay">
-    <div class="spinner-border text-primary" role="status" style="width: 4rem; height: 4rem;">
-      <span class="visually-hidden">Carregando...</span>
-    </div>
-  </div>
+  <output class="spinner-border text-primary" style="width: 4rem; height: 4rem;" aria-live="polite" aria-busy="true">
+    <span class="visually-hidden">Carregando...</span>
+  </output>
+
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
