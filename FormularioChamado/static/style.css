@@ -9,17 +9,29 @@
 body {
     height: 100%;
     margin: 0;
-    background: linear-gradient(to bottom, var(--azul) 5%, var(--azul) 10%, var(--verde) 90%);
+    background: linear-gradient(to bottom, var(--azul) 15%, var(--branco) 50%, var(--verde) 90%);
     margin: 0;
     font-family: Arial, sans-serif;
 }
+
+.modal-content-glass {
+    background: rgba(255, 255, 255, 0.1);     /* Fundo quase transparente */
+    backdrop-filter: blur(10px);             /* Desfoque real */
+    -webkit-backdrop-filter: blur(10px);     /* Compatibilidade com Safari */
+    color: white;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Borda suave translúcida */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+}
+
+
 
 .admin-overlay {
   display: none;
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: var(--verde);
   z-index: 999;
   animation: fadeIn 0.5s ease-in-out;
 }
@@ -28,20 +40,10 @@ body {
   position: relative;
   width: 400px;
   margin: 10% auto;
-  background: white;
+  background: var(--branco);
   padding: 20px;
   border-radius: 10px;
   animation: slideDown 0.4s ease-in-out;
-}
-
-@keyframes slideDown {
-  from { transform: translateY(-50px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
 }
 
 header.epr {
@@ -60,25 +62,16 @@ main {
 }
 
 
-#filtroChamado {
+#filtroLodalidade {
   max-width: 400px;
   margin: 0 auto 30px auto;
   display: block;
 }
 
 
-#tabelaChamados thead {
-  background-color: var(--verde);
+#tabelaChamados {
+  background-color: var(--azul);
   color: var(--branco);
-}
-
-#tabelaChamados tbody tr {
-  background-color: var(--verde);
-  color: var(--cinza-texto);
-}
-
-#tabelaChamados tbody tr:hover {
-  background-color: var(--azul); 
 }
 
 
@@ -108,9 +101,18 @@ h2 {
   font-weight: 700;
   font-size: 2.8rem;
   color: var(--branco);
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+  text-shadow: 1px 1px 2px var(--azul);
   margin-bottom: 1.5rem;
 }
+
+h2.filtro {
+  font-weight: 700;
+  font-size: 2.8rem;
+  color: var(--verde);
+  text-shadow: 1px 1px 2px var(--azul);
+  margin-bottom: 1.5rem;
+}
+
 
 label.form-label {
   font-weight: 600;
@@ -129,7 +131,6 @@ label.form-label {
 
 .btn-primary:hover {
   background-color: var(--verde);
-  box-shadow: 0 0 8px var(--branco);
 }
 
 .form-control:focus, .form-select:focus {
@@ -147,10 +148,23 @@ img {
   max-height: 70px;
 }
 
-@media (max-width: 768px) {
-  img {
+@media (max-width: 1480px) {
+  img.logo-empresa {
     position: static !important;
     display: block;
-    margin: 0 auto 1rem auto;
+    margin: 0 auto 1rem;
+    max-width: 120px;
+    width: auto;
+    height: auto;
   }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

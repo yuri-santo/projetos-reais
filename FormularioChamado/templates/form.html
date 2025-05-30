@@ -10,23 +10,9 @@
 <body>
   <header class="epr">
     <div class="position-relative text-center my-4">
-      <img src="{{ url_for('static', filename='img/logo_max.png') }}"
-        alt="Logo da empresa"
-        class="position-absolute top-0 start-0 img-fluid logo-empresa ms-3 mt-2">
+      <img src="{{ url_for('static', filename='img/logo_max.png') }}" alt="Logo da empresa" class="position-absolute top-0 start-0 img-fluid logo-empresa ms-3 mt-2">
       <h2 class="mb-0">Formulário de acompanhamento de chamado da CEMIG</h2>
-      <button id="admin-btn" class="btn btn-dark" style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
-        Administração
-      </button>
-      <div id="admin-modal" class="admin-overlay">
-        <div class="admin-content">
-          <h3>Área Administrativa</h3>
-          <ul>
-            <li><a href="{{ url_for('lista_chamados') }}">Listar Chamados</a></li>
-            <!-- <li><a href="{{ url_for('exportar_todos') }}">Exportar Todos</a></li> -->
-            <!-- você pode colocar mais links aqui -->
-          </ul>
-          <button id="close-admin" class="btn btn-secondary">Fechar</button>
-        </div>
+      
     </div>
   </header>
 
@@ -44,10 +30,21 @@
           <label for="chamado" class="form-label">Número do chamado</label>
           <input type="text" class="form-control" id="chamado" name="chamado" required />
         </div>
-  
+
         <div class="col-md-6">
-          <label for="localicade" class="form-label">Localicade</label>
-          <select class="form-select" id="localicade" name="localicade" required>
+          <label for="status" class="form-label">Status</label>
+          <select class="form-select" id="status" name="status" required>
+            <option value="" disabled selected>Selecione</option>
+            <!-- valores mantidos -->
+            <option value="Em andamento">Em andamento</option>
+            <option value="Encerrada">Encerrada</option>
+            <option value="Aberta">Aberta</option>
+            </select>
+        </div>
+
+        <div class="col-md-6">
+          <label for="localidade" class="form-label">Localidade</label>
+          <select class="form-select" id="localidade" name="localidade" required>
             <option value="" disabled selected>Selecione</option>
             <option value="PP - 01">PP - 01</option>
             <option value="PP - 10">PP - 10</option>
@@ -63,7 +60,7 @@
             <option value="RPT - 15">RPT - 15</option>
             <option value="RPT - 16">RPT - 16</option>
             <option value="RPT - 18">RPT - 18</option>
-            <option value="RPT- 17Corr almeida">RPT- 17Corr almeida</option>
+            <option value="RPT- 17Corr almeida">Corralmeida</option>
             <option value="RDATA 14.1">RDATA 14.1</option>
             <option value="RDATA 14.2">RDATA 14.2</option>
             <option value="RDATA 14.3">RDATA 14.3</option>
@@ -76,85 +73,52 @@
             <option value="PMV - 09">PMV - 09</option>
           </select>
         </div>
-  
+
         <div class="col-md-6">
           <label for="n_medidor" class="form-label">N° Medidor</label>
           <select class="form-select" id="n_medidor" name="n_medidor" required>
             <option value="" disabled selected>Selecione</option>
-            <option value="GMG126000404">GMG126000404</option>
-            <option value="GMI064000091">GMI064000091</option>
-            <option value="GMJ155000344">GMJ155000344</option>
-            <option value="ARC164006153">ARC164006153</option>
-            <option value="APD167055614">APD167055614</option>
-            <option value="CAA137000001">CAA137000001</option>
-            <option value="APD167028493">APD167028493</option>
-            <option value="APD159029525">APD159029525</option>
-            <option value="ARB145005973">ARB145005973</option>
-            <option value="APD159004232">APD159004232</option>
-            <option value="APD167055651">APD167055651</option>
-            <option value="AJK134033756">AJK134033756</option>
-            <option value="APC149056194">APC149056194</option>
-            <option value="APD159056317">APD159056317</option>
-            <option value="APD175093880">APD175093880</option>
-            <option value="APD142057967">APD142057967</option>
-            <option value="APD159025558">APD159025558</option>
-            <option value="APD159124025">APD159124025</option>
-            <option value="APD142013904">APD142013904</option>
-            <option value="APD159067285">APD159067285</option>
-            <option value="APD1590563227">APD1590563227</option>
-            <option value="APD159070514">APD159070514</option>
-            <option value="APD159095218">APD159095218</option>
-            <option value="APD159038825">APD159038825</option>
-            <option value="AJK134033824">AJK134033824</option>
-            <option value="AJK134032068">AJK134032068</option>
+            <!-- valores mantidos -->
+            {% for medidor in [
+              "GMG126000404", "GMI064000091", "GMJ155000344", "ARC164006153",
+              "APD167055614", "CAA137000001", "APD167028493", "APD159029525",
+              "ARB145005973", "APD159004232", "APD167055651", "AJK134033756",
+              "APC149056194", "APD159056317", "APD175093880", "APD142057967",
+              "APD159025558", "APD159124025", "APD142013904", "APD159067285",
+              "APD1590563227", "APD159070514", "APD159095218", "APD159038825",
+              "AJK134033824", "AJK134032068"
+            ] %}
+            <option value="{{ medidor }}">{{ medidor }}</option>
+            {% endfor %}
           </select>
         </div>
-  
+
         <div class="col-md-6">
           <label for="uc_instalacao" class="form-label">UC/Instalação</label>
           <select class="form-select" id="uc_instalacao" name="uc_instalacao" required>
             <option value="" disabled selected>Selecione</option>
-            <option value="3003271107">3003271107</option>
-            <option value="3012424498">3012424498</option>
-            <option value="3012561397">3012561397</option>
-            <option value="3012569128">3012569128</option>
-            <option value="3012570697">3012570697</option>
-            <option value="3012573851">3012573851</option>
-            <option value="3012586666">3012586666</option>
-            <option value="3012588531">3012588531</option>
-            <option value="3012656251">3012656251</option>
-            <option value="3012667837">3012667837</option>
-            <option value="3012699982">3012699982</option>
-            <option value="3012712558">3012712558</option>
-            <option value="3012712647">3012712647</option>
-            <option value="3012724708">3012724708</option>
-            <option value="3012724735">3012724735</option>
-            <option value="3012724772">3012724772</option>
-            <option value="3012730204">3012730204</option>
-            <option value="3012740719">3012740719</option>
-            <option value="3012757198">3012757198</option>
-            <option value="3012795862">3012795862</option>
-            <option value="3012917317">3012917317</option>
-            <option value="3012926204">3012926204</option>
-            <option value="3012975588">3012975588</option>
-            <option value="3012991579">3012991579</option>
-            <option value="3013057398">3013057398</option>
-            <option value="3013190398">3013190398</option>
-            <option value="3013653187">3013653187</option>
+            {% for uc in [
+              "3003271107", "3012424498", "3012561397", "3012569128", "3012570697", "3012573851",
+              "3012586666", "3012588531", "3012656251", "3012667837", "3012699982", "3012712558",
+              "3012712647", "3012724708", "3012724735", "3012724772", "3012730204", "3012740719",
+              "3012757198", "3012795862", "3012917317", "3012926204", "3012975588", "3012991579",
+              "3013057398", "3013190398", "3013653187"
+            ] %}
+            <option value="{{ uc }}">{{ uc }}</option>
+            {% endfor %}
           </select>
         </div>
 
-  
         <div class="col-md-6">
-          <label for="medidor_atual" class="form-label">Responsavel pela ligação</label>
-          <input type="text" class="form-control" id="medidor_atual" name="medidor_atual" required />
+          <label for="responsavel" class="form-label">Responsável pela ligação</label>
+          <input type="text" class="form-control" id="responsavel" name="responsavel" required />
         </div>
 
         <div class="col-md-6">
           <label for="descricao" class="form-label">Descrição</label>
-          <textarea class="form-control" id="descricao" name="descricao" rows="3" placeholder="Descreva detalhes da localicade"></textarea>
+          <textarea class="form-control" id="descricao" name="descricao" rows="3" placeholder="Descreva detalhes da localidade"></textarea>
         </div>
-  
+
         <div class="col-12 text-center">
           <button type="submit" class="btn btn-primary px-5">Enviar</button>
         </div>
@@ -164,103 +128,121 @@
       <h2 class="text-center">Lista de Chamados Registrados</h2>
 
       <div class="mb-3">
-        <label for="filtroChamado" class="form-label" >Filtrar por número:</label>
-        <select id="filtroChamado" class="form-select" onchange="filtrarChamado()">
-          <option value="" selected disabled>Selecione uma localicade</option>
-          {% for num in chamados_unicos %}
-          <option value="{{ num }}">{{ num }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="table-responsive">
-        <table class="table table-bordered table-striped" id="tabelaChamados">
-          <thead class="table-success">
-            <tr>
-              <th>Chamado</th>
-              <th>Data/Hora</th>
-              <th>Localicade</th>
-              <th>N° Medidor</th>
-              <th>UC/Instalação</th>
-              <th>Responsavel pela ligação</th>
-              <th>Descrição</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for c in chamados %}
-            <tr data-chamado="{{ c.chamado }}">
-              <td>{{ c.chamado or "" }}</td>
-              <td>{{ c.data_hora or "" }}</td>
-              <td>{{ c.localicade or "" }}</td>
-              <td>{{ c.estabelecimento or "" }}</td>
-              <td>{{ c.n_medidor or "" }}</td>
-              <td>{{ c.uc_instalacao or "" }}</td>
-              <td>{{ c.medidor_atual or "" }}</td>
-              <td>{{ c.descricao or "" }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+      <label for="filtroChamado" class="form-label">Filtrar por Localidade:</label>
+      <select id="filtroChamado" class="form-select" onchange="filtrarChamado()">
+        <option value="" selected disabled>Selecione uma localidade</option>
+        {% for loc in localidades %}
+            <option value="{{ loc }}">{{ loc }}</option>
+        {% endfor %}
+      </select>
     </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped" id="tabelaChamados" style="display: none;">
+        <thead class="table-success">
+          <tr>
+            <th>Chamado</th>
+            <th>Data/Hora</th>
+            <th>Status</th>
+            <th>Localidade</th>
+            <th>N° Medidor</th>
+            <th>UC/Instalação</th>
+            <th>Responsável pela ligação</th>
+            <th>Descrição</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in chamados %}
+          <tr data-localidade="{{ row['localidade'] }}">
+              <td>{{ row['data_hora'] }}</td>
+              <td>{{ row['chamado'] }}</td>
+              <td>{{ row['localidade'] }}</td>
+              <td>{{ row['n_medidor'] }}</td>
+              <td>{{ row['uc_instalacao'] }}</td>
+              <td>{{ row['responsavel'] }}</td>
+              <td>{{ row['descricao'] }}</td>
+              <td>{{ row['status'] }}</td>
+              <td>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEditar{{ row['id'] }}">
+                  Editar
+                </button>
+              </td>
+          </tr>
+          <div class="modal fade" id="modalEditar{{ row['id'] }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content modal-content-glass">
+                <div class="modal-header">
+                  <h5 class="modal-title">Editar Chamado</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                  <form method="post" action="{{ url_for('editar_chamado', id=row['id']) }}">
+                    <label>Chamado:</label>
+                    <input type="text" name="chamado" value="{{ row['chamado'] }}" class="form-control mb-2" required>
+
+                    <label>Localidade:</label>
+                    <input type="text" name="localidade" value="{{ row['localidade'] }}" class="form-control mb-2">
+
+                    <label>Nº Medidor:</label>
+                    <input type="text" name="n_medidor" value="{{ row['n_medidor'] }}" class="form-control mb-2">
+
+                    <label>UC Instalação:</label>
+                    <input type="text" name="uc_instalacao" value="{{ row['uc_instalacao'] }}" class="form-control mb-2">
+
+                    <label>Responsável:</label>
+                    <input type="text" name="responsavel" value="{{ row['responsavel'] }}" class="form-control mb-2">
+
+                    <label>Descrição:</label>
+                    <textarea name="descricao" class="form-control mb-2">{{ row['descricao'] }}</textarea>
+
+                    <label>Status:</label>
+                    <input type="text" name="status" value="{{ row['status'] }}" class="form-control mb-3">
+
+                    <button type="submit" class="btn btn-success w-100">Salvar</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+      </tbody>
+      </table>
+    </div>
+    
   </main>
 
   <footer class="text-center py-3">
     <span class="text-muted">Grupo EPR <br> Via Mineira <br> © {{ now.year }}</span>
   </footer>
 
-  <output class="spinner-border text-primary" style="width: 4rem; height: 4rem;" aria-live="polite" aria-busy="true">
-    <span class="visually-hidden">Carregando...</span>
-  </output>
+
+ <script>
+  function filtrarChamado() {
+    var filtro = document.getElementById('filtroChamado').value;
+    var linhas = document.querySelectorAll('#tabelaChamados tbody tr');
+    var tabela = document.getElementById('tabelaChamados');
+
+    if (!filtro) {
+      tabela.style.display = 'none';
+      return;
+    }
+
+    tabela.style.display = ''; // Mostra a tabela quando tem filtro
+
+    linhas.forEach(function(linha) {
+      var localidade = linha.getAttribute('data-localidade');
+      if (!filtro || localidade === filtro) {
+        linha.style.display = '';
+      } else {
+        linha.style.display = 'none';
+      }
+    });
+  }
+  </script>
+
 
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const linhas = document.querySelectorAll('#tabelaChamados tbody tr');
-      linhas.forEach(linha => {
-        linha.style.display = 'none';
-      });
-    
-      const alert = document.getElementById('success-alert');
-      if (alert) {
-        alert.style.opacity = 1;
-        setTimeout(() => {
-          alert.style.transition = "opacity 1s ease";
-          alert.style.opacity = 0;
-          setTimeout(() => alert.remove(), 1000);
-        }, 4000);
-      }
-    });
-
-    function filtrarChamado() {
-      const filtro = document.getElementById('filtroChamado').value;
-      const linhas = document.querySelectorAll('#tabelaChamados tbody tr');
-    
-      linhas.forEach(linha => {
-        const chamado = linha.getAttribute('data-chamado');
-        if (filtro && chamado === filtro) {
-          linha.style.display = '';
-        } else {
-          linha.style.display = 'none';
-        }
-      });
-    }
-
-    document.getElementById("admin-btn").addEventListener("click", function () {
-      document.getElementById("admin-modal").style.display = "block";
-    });
-    
-    document.getElementById("close-admin").addEventListener("click", function () {
-      document.getElementById("admin-modal").style.display = "none";
-    });
-
-    const form = document.getElementById('formChamado');
-    const loading = document.getElementById('loading-overlay');
-    form.addEventListener('submit', () => {
-      loading.style.display = 'flex';
-    });
-  </script>
 </body>
 </html>
