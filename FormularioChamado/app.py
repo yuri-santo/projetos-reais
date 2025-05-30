@@ -55,9 +55,10 @@ def index():
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ''', (horario, chamado, localidade, n_medidor, uc_instalacao, responsavel, descricao, status))
         conn.commit()
-        return redirect(url_for('index', success=1))
+        return redirect(url_for('index', success='create'))
 
     success = request.args.get('success')
+    
 
     chamados = conn.execute('SELECT * FROM chamados').fetchall()
 
@@ -99,8 +100,16 @@ def editar_chamado(id):
 
     conn.commit()
     conn.close()
-    return redirect(url_for('index'))
+    return redirect(url_for('index', success='edit'))
 
+@app.route('/deletar_chamado/<int:id>', methods=['POST'])
+def deletar_chamado(id):
+    conn = sqlite3.connect('chamados.db')
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM chamados WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('index', success='delete'))
 
 
 if __name__ == "__main__":

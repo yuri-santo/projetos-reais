@@ -14,6 +14,40 @@
       <h2 class="mb-0">Formulário de acompanhamento de chamado da CEMIG</h2>
       
     </div>
+
+    <!-- Modal de Sucesso -->
+    <div class="modal fade" id="modalSucesso" tabindex="-1" aria-labelledby="modalSucessoLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-content-glass">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalSucessoLabel">Sucesso</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          </div>
+          <div class="modal-body text-center fw-bold text-danger fs-5">
+            {% if success == 'create' %}
+              Chamado criado com sucesso!
+            {% elif success == 'edit' %}
+              Chamado editado com sucesso!
+            {% elif success == 'delete' %}
+              Chamado excluído com sucesso!
+            {% endif %}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="window.location.href='/'">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% if success %}
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          var modal = new bootstrap.Modal(document.getElementById('modalSucesso'));
+          modal.show();
+        });
+      </script>
+    {% endif %}
+
+
   </header>
 
   <main class="epr_conteudo">
@@ -141,8 +175,8 @@
       <table class="table table-bordered table-striped" id="tabelaChamados" style="display: none;">
         <thead class="table-success">
           <tr>
-            <th>Chamado</th>
             <th>Data/Hora</th>
+            <th>Chamado</th>
             <th>Status</th>
             <th>Localidade</th>
             <th>N° Medidor</th>
@@ -157,15 +191,18 @@
           <tr data-localidade="{{ row['localidade'] }}">
               <td>{{ row['data_hora'] }}</td>
               <td>{{ row['chamado'] }}</td>
+              <td>{{ row['status'] }}</td>
               <td>{{ row['localidade'] }}</td>
               <td>{{ row['n_medidor'] }}</td>
               <td>{{ row['uc_instalacao'] }}</td>
               <td>{{ row['responsavel'] }}</td>
               <td>{{ row['descricao'] }}</td>
-              <td>{{ row['status'] }}</td>
               <td>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEditar{{ row['id'] }}">
-                  Editar
+                  Modificar status
+                </button>
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalExcluir{{ row['id'] }}">
+                  Excluir
                 </button>
               </td>
           </tr>
@@ -173,31 +210,35 @@
             <div class="modal-dialog">
               <div class="modal-content modal-content-glass">
                 <div class="modal-header">
-                  <h5 class="modal-title">Editar Chamado</h5>
+                  <h5 class="modal-title">Status do chamado atual</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                   <form method="post" action="{{ url_for('editar_chamado', id=row['id']) }}">
                     <label>Chamado:</label>
-                    <input type="text" name="chamado" value="{{ row['chamado'] }}" class="form-control mb-2" required>
+                    <input type="text" name="chamado" value="{{ row['chamado'] }}" class="form-control mb-2" readonly>
 
                     <label>Localidade:</label>
-                    <input type="text" name="localidade" value="{{ row['localidade'] }}" class="form-control mb-2">
+                    <input type="text" name="localidade" value="{{ row['localidade'] }}" class="form-control mb-2" readonly>
 
                     <label>Nº Medidor:</label>
-                    <input type="text" name="n_medidor" value="{{ row['n_medidor'] }}" class="form-control mb-2">
+                    <input type="text" name="n_medidor" value="{{ row['n_medidor'] }}" class="form-control mb-2" readonly>
 
                     <label>UC Instalação:</label>
-                    <input type="text" name="uc_instalacao" value="{{ row['uc_instalacao'] }}" class="form-control mb-2">
+                    <input type="text" name="uc_instalacao" value="{{ row['uc_instalacao'] }}" class="form-control mb-2" readonly>
 
                     <label>Responsável:</label>
-                    <input type="text" name="responsavel" value="{{ row['responsavel'] }}" class="form-control mb-2">
+                    <input type="text" name="responsavel" value="{{ row['responsavel'] }}" class="form-control mb-2" readonly>
 
                     <label>Descrição:</label>
-                    <textarea name="descricao" class="form-control mb-2">{{ row['descricao'] }}</textarea>
+                    <textarea name="descricao" class="form-control mb-2"readonly>{{ row['descricao'] }}</textarea>
 
-                    <label>Status:</label>
-                    <input type="text" name="status" value="{{ row['status'] }}" class="form-control mb-3">
+                    <label for="status">Status:</label>
+                    <select name="status" id="status" class="form-control mb-3">
+                      <option value="Aberto" {% if row['status'] == 'Aberto' %}selected{% endif %}>Aberto</option>
+                      <option value="Em Andamento" {% if row['status'] == 'Em Andamento' %}selected{% endif %}>Em Andamento</option>
+                      <option value="Fechado" {% if row['status'] == 'Fechado' %}selected{% endif %}>Fechado</option>
+                    </select>
 
                     <button type="submit" class="btn btn-success w-100">Salvar</button>
                   </form>
@@ -205,6 +246,31 @@
               </div>
             </div>
           </div>
+
+          <div class="modal fade" id="modalExcluir{{ row['id'] }}" tabindex="-1" aria-labelledby="modalExcluirLabel{{ row['id'] }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content modal-content-glass">
+
+                <div class="modal-header">
+                  <h5 class="modal-title" id="modalExcluirLabel{{ row['id'] }}">Confirmar Exclusão</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+
+                <div class="modal-body text-center fw-bold text-danger fs-5">
+                  Tem certeza que deseja excluir o chamado <br>"<span class="text-white"> {{ row['chamado'] }} </span>"?
+                </div>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <form method="post" action="{{ url_for('deletar_chamado', id=row['id']) }}">
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                  </form>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
           {% endfor %}
       </tbody>
       </table>
@@ -239,6 +305,7 @@
       }
     });
   }
+ 
   </script>
 
 
