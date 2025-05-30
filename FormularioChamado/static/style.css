@@ -15,13 +15,13 @@ body {
 }
 
 .modal-content-glass {
-    background: rgba(255, 255, 255, 0.1);     /* Fundo quase transparente */
-    backdrop-filter: blur(10px);             /* Desfoque real */
-    -webkit-backdrop-filter: blur(10px);     /* Compatibilidade com Safari */
-    color: white;
+    background: var(--verde);    
+    backdrop-filter: blur(10px);             
+    -webkit-backdrop-filter: blur(10px);     
+    color: var(--cinza-texto);
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.2); /* Borda suave translúcida */
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+    border: 1px solid var(--verde); 
+    box-shadow: 0 8px 32px var(--azul);
 }
 
 
