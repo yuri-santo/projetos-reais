@@ -1,0 +1,4 @@
+[2025-05-31 06:57:37] Host: DESKTOP-4SSGIED | Operação: Inserção | Detalhes: Chamado inserido: "dasdsa" em PP - 10, medidor GMI064000091, status Em andamento
+[2025-05-31 06:58:28] Host: DESKTOP-4SSGIED | Operação: Edição | Detalhes: Chamado ID 5 editado. Antes: "dasdsad" - Depois: "dasdsad"
+[2025-05-31 07:01:04] Host: DESKTOP-4SSGIED | Operação: Deleção | Detalhes: Chamado ID 8 deletado: "sadsdsa"
+[2025-05-31 07:02:23] Host: DESKTOP-4SSGIED | Operação: Deleção | Detalhes: Chamado ID 5 deletado: "dasdsad"

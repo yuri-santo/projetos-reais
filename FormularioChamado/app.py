@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, send_file
 from datetime import datetime
 import sqlite3
-import io
+import socket
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'sua_chave_secreta_aqui'
@@ -12,6 +13,14 @@ def get_db_connection():
     conn = sqlite3.connect(DATABASE)
     conn.row_factory = sqlite3.Row  
     return conn
+
+
+def registrar_log(operacao, descricao):
+    hostname = socket.gethostname()
+    agora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    linha_log = f"[{agora}] Host: {hostname} | Operação: {operacao} | Detalhes: {descricao}\n"
+    with open('log.txt', 'a', encoding='utf-8') as arquivo_log:
+        arquivo_log.write(linha_log)
 
 
 def init_db():
@@ -55,6 +64,8 @@ def index():
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ''', (horario, chamado, localidade, n_medidor, uc_instalacao, responsavel, descricao, status))
         conn.commit()
+        conn.close()
+        registrar_log('Inserção', f'Chamado inserido: "{chamado}" em {localidade}, medidor {n_medidor}, status {status}')
         return redirect(url_for('index', success='create'))
 
     success = request.args.get('success')
@@ -63,14 +74,16 @@ def index():
     chamados = conn.execute('SELECT * FROM chamados').fetchall()
 
     localidades = conn.execute('SELECT DISTINCT localidade FROM chamados WHERE localidade IS NOT NULL AND localidade != ""').fetchall()
+    status = conn.execute('SELECT DISTINCT status FROM chamados WHERE status IS NOT NULL AND status != ""').fetchall()
 
     conn.close()
 
     return render_template(
         'form.html',
         success=success,
-        localidades=[row['localidade'] for row in localidades],  # passa lista de localidades
-        chamados=chamados,  # passa todos os chamados
+        localidades=[row['localidade'] for row in localidades],
+        status=[row['status'] for row in status],
+        chamados=chamados,  
         now=datetime.now()
     )
 
@@ -79,7 +92,9 @@ def editar_chamado(id):
     conn = get_db_connection()
     chamado = conn.execute('SELECT * FROM chamados WHERE id = ?', (id,)).fetchone()
 
-    if not chamado:
+    chamado_antigo = conn.execute('SELECT * FROM chamados WHERE id = ?', (id,)).fetchone()
+
+    if not chamado_antigo:
         conn.close()
         return "Chamado não encontrado", 404
 
@@ -100,15 +115,20 @@ def editar_chamado(id):
 
     conn.commit()
     conn.close()
+    registrar_log('Edição', f'Chamado ID {id} editado. Antes: "{chamado_antigo["chamado"]}" - Depois: "{chamado_novo}"')
     return redirect(url_for('index', success='edit'))
 
 @app.route('/deletar_chamado/<int:id>', methods=['POST'])
 def deletar_chamado(id):
-    conn = sqlite3.connect('chamados.db')
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM chamados WHERE id = ?", (id,))
+    conn = get_db_connection()
+    chamado = conn.execute('SELECT * FROM chamados WHERE id = ?', (id,)).fetchone()
+    if not chamado:
+        conn.close()
+        return "Chamado não encontrado", 404
+    conn.execute("DELETE FROM chamados WHERE id = ?", (id,))
     conn.commit()
     conn.close()
+    registrar_log('Deleção', f'Chamado ID {id} deletado: "{chamado["chamado"]}"')
     return redirect(url_for('index', success='delete'))
 
 
