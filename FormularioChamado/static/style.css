@@ -68,10 +68,18 @@ main {
   display: block;
 }
 
+.filtro {
+  color: var(--azul);
+}
+label.text_filtro {
+  color: var(--azul) !important;
+}
+
+
 
 #tabelaChamados {
   background-color: var(--azul);
-  color: var(--branco);
+  color: var(--azul);
 }
 
 
@@ -101,15 +109,15 @@ h2 {
   font-weight: 700;
   font-size: 2.8rem;
   color: var(--branco);
-  text-shadow: 1px 1px 2px var(--azul);
+  text-shadow: 1px 1px 2px var(--verde);
   margin-bottom: 1.5rem;
 }
 
 h2.filtro {
   font-weight: 700;
   font-size: 2.8rem;
-  color: var(--verde);
-  text-shadow: 1px 1px 2px var(--azul);
+  color: var(--azul);
+  text-shadow: 1px 1px 2px var(--verde);
   margin-bottom: 1.5rem;
 }
 

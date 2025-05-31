@@ -153,10 +153,10 @@
       </form>
 
       <hr class="my-5" />
-      <h2 class="text-center">Lista de Chamados Registrados</h2>
+      <h2 class="text-center filtro">Lista de Chamados Registrados</h2>
 
       <div class="mb-3">
-      <label for="filtroChamado" class="form-label">Filtrar por Localidade:</label>
+      <label for="filtroChamado" class="form-label text_filtro">Filtrar por Localidade:</label>
       <select id="filtroChamado" class="form-select" onchange="filtrarChamado()">
         <option value="" selected disabled>Selecione uma localidade</option>
         {% for loc in localidades %}
@@ -166,7 +166,7 @@
     </div>
 
     <div class="mb-3">
-      <label for="filtroStatus" class="form-label">Filtrar por Status:</label>
+      <label for="filtroStatus" class="form-label text_filtro">Filtrar por Status:</label>
       <select id="filtroStatus" class="form-select" onchange="filtrarChamado()">
         <option value="" selected disabled>Selecione um status</option>
         <option value="Aberta">Aberta</option>
