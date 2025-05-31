@@ -90,33 +90,21 @@ def index():
 @app.route('/editar/<int:id>', methods=['POST'])
 def editar_chamado(id):
     conn = get_db_connection()
-    chamado = conn.execute('SELECT * FROM chamados WHERE id = ?', (id,)).fetchone()
-
     chamado_antigo = conn.execute('SELECT * FROM chamados WHERE id = ?', (id,)).fetchone()
 
     if not chamado_antigo:
         conn.close()
         return "Chamado não encontrado", 404
 
-    chamado_novo = request.form.get('chamado')
-    localidade = request.form.get('localidade')
-    n_medidor = request.form.get('n_medidor')
-    uc_instalacao = request.form.get('uc_instalacao')
-    responsavel = request.form.get('responsavel')
-    descricao = request.form.get('descricao')
     status = request.form.get('status')
 
-    conn.execute('''
-        UPDATE chamados
-        SET chamado = ?, localidade = ?, n_medidor = ?, uc_instalacao = ?, 
-            responsavel = ?, descricao = ?, status = ?
-        WHERE id = ?
-    ''', (chamado_novo, localidade, n_medidor, uc_instalacao, responsavel, descricao, status, id))
-
+    conn.execute('UPDATE chamados SET status = ? WHERE id = ?', (status, id))
     conn.commit()
     conn.close()
-    registrar_log('Edição', f'Chamado ID {id} editado. Antes: "{chamado_antigo["chamado"]}" - Depois: "{chamado_novo}"')
+
+    registrar_log('Edição', f'Status do chamado ID {id} alterado. De: "{chamado_antigo["status"]}" Para: "{status}"')
     return redirect(url_for('index', success='edit'))
+
 
 @app.route('/deletar_chamado/<int:id>', methods=['POST'])
 def deletar_chamado(id):

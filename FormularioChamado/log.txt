@@ -2,3 +2,11 @@
 [2025-05-31 06:58:28] Host: DESKTOP-4SSGIED | Operação: Edição | Detalhes: Chamado ID 5 editado. Antes: "dasdsad" - Depois: "dasdsad"
 [2025-05-31 07:01:04] Host: DESKTOP-4SSGIED | Operação: Deleção | Detalhes: Chamado ID 8 deletado: "sadsdsa"
 [2025-05-31 07:02:23] Host: DESKTOP-4SSGIED | Operação: Deleção | Detalhes: Chamado ID 5 deletado: "dasdsad"
+[2025-05-31 07:45:03] Host: DESKTOP-4SSGIED | Operação: Edição | status: Chamado ID 6 editado. Antes: "sadsad" - Depois: "sadsad"
+[2025-05-31 07:45:27] Host: DESKTOP-4SSGIED | Operação: Inserção | status: Chamado inserido: "teste" em PP - 11, medidor GMJ155000344, status Fechado
+[2025-05-31 07:45:43] Host: DESKTOP-4SSGIED | Operação: Deleção | status: Chamado ID 11 deletado: "teste"
+[2025-05-31 08:08:23] Host: DESKTOP-4SSGIED | Operação: Edição | status: Status do chamado ID 9 alterado para "Em Andamento"
+[2025-05-31 08:10:01] Host: DESKTOP-4SSGIED | Operação: Edição | status: Status do chamado <sqlite3.Row object at 0x00000162DF9D86A0> alterado para "Fechado"
+[2025-05-31 08:16:54] Host: DESKTOP-4SSGIED | Operação: Edição | status: Status do chamado ID 6 alterado. Status anterior: "Em Andamento", novo status: "Fechado"
+[2025-05-31 08:17:02] Host: DESKTOP-4SSGIED | Operação: Edição | status: Status do chamado ID 6 alterado. Status anterior: "Fechado", novo status: "Aberto"
+[2025-05-31 08:20:16] Host: DESKTOP-4SSGIED | Operação: Edição | status: Status do chamado ID 9 alterado. De: "Fechado" Para: "Em Andamento"
