@@ -15,7 +15,7 @@
       
     </div>
 
-    <!-- Modal de Sucesso -->
+    
     <div class="modal fade" id="modalSucesso" tabindex="-1" aria-labelledby="modalSucessoLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content modal-content-glass">
@@ -23,7 +23,7 @@
             <h5 class="modal-title" id="modalSucessoLabel">Sucesso</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
           </div>
-          <div class="modal-body text-center fw-bold text-danger fs-5">
+          <div class="modal-body fw-bold text-danger fs-5">
             {% if success == 'create' %}
               Chamado criado com sucesso!
             {% elif success == 'edit' %}
@@ -63,7 +63,6 @@
           <label for="status" class="form-label">Status</label>
           <select class="form-select" id="status" name="status" required>
             <option value="" disabled selected>Selecione</option>
-            <!-- valores mantidos -->
             <option value="Em andamento">Em andamento</option>
             <option value="Fechado">Fechado</option>
             <option value="Aberta">Aberta</option>
@@ -106,7 +105,6 @@
           <label for="n_medidor" class="form-label">N° Medidor</label>
           <select class="form-select" id="n_medidor" name="n_medidor" required>
             <option value="" disabled selected>Selecione</option>
-            <!-- valores mantidos -->
             {% for medidor in [
               "GMG126000404", "GMI064000091", "GMJ155000344", "ARC164006153",
               "APD167055614", "CAA137000001", "APD167028493", "APD159029525",

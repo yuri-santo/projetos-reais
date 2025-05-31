@@ -15,10 +15,10 @@ def get_db_connection():
     return conn
 
 
-def registrar_log(operacao, descricao):
+def registrar_log(operacao, status):
     hostname = socket.gethostname()
     agora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    linha_log = f"[{agora}] Host: {hostname} | Operação: {operacao} | Detalhes: {descricao}\n"
+    linha_log = f"[{agora}] Host: {hostname} | Operação: {operacao} | status: {status}\n"
     with open('log.txt', 'a', encoding='utf-8') as arquivo_log:
         arquivo_log.write(linha_log)
 
