@@ -3,6 +3,8 @@ from datetime import datetime
 import sqlite3
 import socket
 from datetime import datetime
+import pandas as pd
+from io import BytesIO
 
 app = Flask(__name__)
 app.secret_key = 'sua_chave_secreta_aqui'
@@ -51,9 +53,9 @@ def index():
 
     if request.method == "POST":
         chamado = request.form.get("chamado")
-        data_ocorrencia = request.form.get("data_ocorrencia")       # Data e hora do chamado
-        hr_inicio = request.form.get("hr_inicio")       # Hora início
-        hr_fim = request.form.get("hr_fim")             # Hora fim
+        data_ocorrencia = request.form.get("data_ocorrencia")      
+        hr_inicio = request.form.get("hr_inicio")       
+        hr_fim = request.form.get("hr_fim")             
         localidade = request.form.get("localidade")
         n_medidor = request.form.get("n_medidor")
         uc_instalacao = request.form.get("uc_instalacao")
@@ -78,7 +80,22 @@ def index():
 
     success = request.args.get('success')
 
-    chamados = conn.execute('SELECT * FROM chamados').fetchall()
+    filtro_localidade = request.args.get('localidade')
+    filtro_status = request.args.get('status')
+
+    query = 'SELECT * FROM chamados WHERE 1=1'
+    params = []
+
+    if filtro_localidade and filtro_localidade != 'Todos':
+        query += ' AND localidade = ?'
+        params.append(filtro_localidade)
+    
+    if filtro_status and filtro_status != 'Todos':
+        query += ' AND status = ?'
+        params.append(filtro_status)
+    
+    chamados = conn.execute(query, params).fetchall()
+
 
     localidades = conn.execute('SELECT DISTINCT localidade FROM chamados WHERE localidade IS NOT NULL AND localidade != ""').fetchall()
     status = conn.execute('SELECT DISTINCT status FROM chamados WHERE status IS NOT NULL AND status != ""').fetchall()
@@ -91,7 +108,9 @@ def index():
         localidades=[row['localidade'] for row in localidades],
         status=[row['status'] for row in status],
         chamados=chamados,
-        now=datetime.now()
+        now=datetime.now(),
+        filtro_localidade=filtro_localidade or 'Todos',
+        filtro_status=filtro_status or 'Todos'
     )
 
 @app.route('/editar/<int:id>', methods=['POST'])
@@ -126,6 +145,53 @@ def deletar_chamado(id):
     registrar_log('Deleção', f'Chamado ID {id} deletado: "{chamado["chamado"]}"')
     return redirect(url_for('index', success='delete'))
 
+@app.route('/exportar_excel')
+def exportar_excel():
+    try:
+        conn = get_db_connection()
+        
+        filtro_localidade = request.args.get('localidade')
+        filtro_status = request.args.get('status')
+        
+        query = 'SELECT * FROM chamados WHERE 1=1'
+        params = []
+        
+        if filtro_localidade and filtro_localidade != 'Todos':
+            query += ' AND localidade = ?'
+            params.append(filtro_localidade)
+        
+        if filtro_status and filtro_status != 'Todos':
+            query += ' AND status = ?'
+            params.append(filtro_status)
+        
+        df = pd.read_sql_query(query, conn, params=params if params else None)
+        conn.close()
+        
+        output = BytesIO()
+        writer = pd.ExcelWriter(output, engine='xlsxwriter')
+        df.to_excel(writer, sheet_name='Chamados', index=False)
+        writer.close()
+        output.seek(0)
+        
+        filename = "chamados_exportados"
+        if filtro_localidade and filtro_localidade != 'Todos':
+            filename += f"_{filtro_localidade}"
+        if filtro_status and filtro_status != 'Todos':
+            filename += f"_{filtro_status}"
+        filename += f"_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+        
+        registrar_log('Exportação', f'Dados exportados para Excel com filtros: localidade={filtro_localidade}, status={filtro_status}')
+        
+        return send_file(
+            output,
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            as_attachment=True,
+            download_name=filename
+        )
+    
+    except Exception as e:
+        registrar_log('Exportação', f'Falha na exportação: {str(e)}')
+        return redirect(url_for('index', error='export'))
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

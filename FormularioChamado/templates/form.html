@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Formulário CEMIG</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
   <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo_max.png') }}">
 </head>
@@ -156,29 +157,39 @@
         </div>
       </form>
 
-      <hr class="my-5" />
+    </div>
+    <div class="row mb-3" id="filtrosContainer">
       <h2 class="text-center filtro">Lista de Chamados Registrados</h2>
 
-      <div class="mb-3">
-      <label for="filtroChamado" class="form-label text_filtro">Filtrar por Localidade:</label>
-      <select id="filtroChamado" class="form-select" onchange="filtrarChamado()">
-        <option value="" selected disabled>Selecione uma localidade</option>
-        {% for loc in localidades %}
-            <option value="{{ loc }}">{{ loc }}</option>
-        {% endfor %}
-      </select>
-    </div>
+      <div class="col-md-4">
+          <label for="filtroChamado" class="form-label text_filtro">Filtrar por Localidade:</label>
+          <select id="filtroChamado" class="form-select" onchange="filtrarChamado()">
+              <option value="" selected>Todos</option>
+              {% for loc in localidades %}
+                  <option value="{{ loc }}">{{ loc }}</option>
+              {% endfor %}
+          </select>
+      </div>
 
-    <div class="mb-3">
-      <label for="filtroStatus" class="form-label text_filtro">Filtrar por Status:</label>
-      <select id="filtroStatus" class="form-select" onchange="filtrarChamado()">
-        <option value="" selected disabled>Selecione um status</option>
-        <option value="Aberta">Aberto</option>
-        <option value="Em Andamento">Em Andamento</option>
-        <option value="Fechado">Fechado</option>
-      </select>
-    </div>
+      <div class="col-md-4">
+          <label for="filtroStatus" class="form-label text_filtro">Filtrar por Status:</label>
+          <select id="filtroStatus" class="form-select" onchange="filtrarChamado()">
+              <option value="" selected>Todos</option>
+              <option value="Aberto">Aberto</option>
+              <option value="Em Andamento">Em Andamento</option>
+              <option value="Fechado">Fechado</option>
+          </select>
+      </div>
 
+      <div class="col-md-4 d-flex align-items-end">
+          <button class="btn btn-success me-2" onclick="exportarExcel()">
+              <i class="bi bi-file-excel"></i> Exportar Filtrados
+          </button>
+          <a href="{{ url_for('exportar_excel') }}" class="btn btn-secondary">
+              <i class="bi bi-file-excel"></i> Exportar Todos
+          </a>
+      </div>
+    </div>
 
     <div class="table-responsive" style="overflow-x: auto;">
       <table class="table table-bordered table-striped" id="tabelaChamados" style="display: none; white-space: nowrap; width: 100%;">
@@ -279,13 +290,12 @@
                     <button type="submit" class="btn btn-danger">Excluir</button>
                   </form>
                 </div>
-
+                {% endfor %}
               </div>
             </div>
           </div>
-
-          {% endfor %}
-      </tbody>
+          
+        </tbody>
       </table>
     </div>
     
@@ -297,31 +307,56 @@
 
 
  <script>
-  function filtrarChamado() {
-    const filtroLocalidade = document.getElementById("filtroChamado").value;
-    const filtroStatus = document.getElementById("filtroStatus").value;
-    const tabela = document.getElementById("tabelaChamados");
-    const linhas = tabela.querySelectorAll("tbody tr");
+  function exportarExcel() {
+        const filtroLocalidade = document.getElementById("filtroChamado").value;
+        const filtroStatus = document.getElementById("filtroStatus").value;
+        
+        let url = "{{ url_for('exportar_excel') }}";
+        let params = [];
+        
+        if (filtroLocalidade) {
+            params.push(`localidade=${encodeURIComponent(filtroLocalidade)}`);
+        }
+        if (filtroStatus) {
+            params.push(`status=${encodeURIComponent(filtroStatus)}`);
+        }
+        
+        if (params.length > 0) {
+            url += "?" + params.join("&");
+        }
+        
+        window.location.href = url;
+    }
 
-    let temResultados = false;
+    function filtrarChamado() {
+        const filtroLocalidade = document.getElementById("filtroChamado").value;
+        const filtroStatus = document.getElementById("filtroStatus").value;
+        const tabela = document.getElementById("tabelaChamados");
+        const linhas = tabela.querySelectorAll("tbody tr");
 
-    linhas.forEach((linha) => {
-      const localidade = linha.getAttribute("data-localidade");
-      const status = linha.children[2].textContent.trim(); 
+        let temResultados = false;
 
-      const correspondeLocalidade = !filtroLocalidade || localidade === filtroLocalidade;
-      const correspondeStatus = !filtroStatus || status === filtroStatus;
+        linhas.forEach((linha) => {
+            const localidade = linha.getAttribute("data-localidade");
+            const status = linha.querySelector("td:nth-child(5)").textContent.trim();
 
-      if (correspondeLocalidade && correspondeStatus) {
-        linha.style.display = "";
-        temResultados = true;
-      } else {
-        linha.style.display = "none";
-      }
+            const correspondeLocalidade = !filtroLocalidade || localidade === filtroLocalidade;
+            const correspondeStatus = !filtroStatus || status === filtroStatus;
+
+            if (correspondeLocalidade && correspondeStatus) {
+                linha.style.display = "";
+                temResultados = true;
+            } else {
+                linha.style.display = "none";
+            }
+        });
+
+        tabela.style.display = temResultados ? "table" : "none";
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById("tabelaChamados").style.display = "table";
     });
-
-    tabela.style.display = temResultados ? "table" : "none";
-  }
 </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

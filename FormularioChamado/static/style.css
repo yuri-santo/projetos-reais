@@ -62,11 +62,14 @@ main {
   font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
 }
 
+#filtrosContainer {
+  max-width: 800px;
+  margin: 0 auto 30px auto;
+}
 
-#filtroLodalidade {
+#filtroChamado {
   max-width: 400px;
   margin: 0 auto 30px auto;
-  display: block;
 }
 
 .filtro {
