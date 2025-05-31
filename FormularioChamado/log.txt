@@ -10,3 +10,9 @@
 [2025-05-31 08:16:54] Host: DESKTOP-4SSGIED | Operação: Edição | status: Status do chamado ID 6 alterado. Status anterior: "Em Andamento", novo status: "Fechado"
 [2025-05-31 08:17:02] Host: DESKTOP-4SSGIED | Operação: Edição | status: Status do chamado ID 6 alterado. Status anterior: "Fechado", novo status: "Aberto"
 [2025-05-31 08:20:16] Host: DESKTOP-4SSGIED | Operação: Edição | status: Status do chamado ID 9 alterado. De: "Fechado" Para: "Em Andamento"
+[2025-05-31 10:48:42] Host: DESKTOP-4SSGIED | Operação: Inserção | status: Chamado inserido: "teste" em PP - 11, medidor GMJ155000344, status Fechado
+[2025-05-31 10:54:22] Host: DESKTOP-4SSGIED | Operação: Inserção | status: Chamado inserido: "teste 2" em PP - 11, medidor GMI064000091, status None
+[2025-05-31 11:08:18] Host: DESKTOP-4SSGIED | Operação: Inserção | status: Chamado inserido: "teste 1" em PP - 11, medidor GMI064000091, status None
+[2025-05-31 11:10:31] Host: DESKTOP-4SSGIED | Operação: Inserção | status: Chamado inserido: "teste 2" em PP - 10, medidor GMI064000091, status Aberto
+[2025-05-31 11:10:45] Host: DESKTOP-4SSGIED | Operação: Edição | status: Status do chamado ID 2 alterado. De: "Aberto" Para: "Em Andamento"
+[2025-05-31 11:11:01] Host: DESKTOP-4SSGIED | Operação: Deleção | status: Chamado ID 1 deletado: "teste 1"

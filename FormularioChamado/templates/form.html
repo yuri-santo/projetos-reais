@@ -56,18 +56,23 @@
 
       <form method="POST" action="/" class="row g-3" id="formChamado">
         <div class="col-md-6">
-          <label for="chamado" class="form-label">Número do chamado</label>
-          <input type="text" class="form-control" id="chamado" name="chamado" required />
+          <label for="data_ocorrencia" class="form-label">Data</label>
+          <input type="text" class="form-control" id="data_ocorrencia" name="data_ocorrencia" placeholder="DD-MM-YYYY" required />
         </div>
 
         <div class="col-md-6">
-          <label for="status" class="form-label">Status</label>
-          <select class="form-select" id="status" name="status" required>
-            <option value="" disabled selected>Selecione</option>
-            <option value="Em andamento">Em andamento</option>
-            <option value="Fechado">Fechado</option>
-            <option value="Aberta">Aberta</option>
-            </select>
+          <label for="hr_inicio" class="form-label">Horário do início da Falta de energia</label>
+          <input type="text" class="form-control" id="hr_inicio" name="hr_inicio" placeholder="HH:MM:SS" required />
+        </div>
+
+        <div class="col-md-6">
+          <label for="hr_fim" class="form-label">Horário do restabelecimento da energia</label>
+          <input type="text" class="form-control" id="hr_fim" name="hr_fim" placeholder="HH:MM:SS" required />
+        </div>
+
+        <div class="col-md-6">
+          <label for="chamado" class="form-label">Número do chamado</label>
+          <input type="text" class="form-control" id="chamado" name="chamado" required />
         </div>
 
         <div class="col-md-6">
@@ -168,24 +173,26 @@
       <label for="filtroStatus" class="form-label text_filtro">Filtrar por Status:</label>
       <select id="filtroStatus" class="form-select" onchange="filtrarChamado()">
         <option value="" selected disabled>Selecione um status</option>
-        <option value="Aberta">Aberta</option>
+        <option value="Aberta">Aberto</option>
         <option value="Em Andamento">Em Andamento</option>
         <option value="Fechado">Fechado</option>
       </select>
     </div>
 
 
-    <div class="table-responsive">
-      <table class="table table-bordered table-striped" id="tabelaChamados" style="display: none;">
+    <div class="table-responsive" style="overflow-x: auto;">
+      <table class="table table-bordered table-striped" id="tabelaChamados" style="display: none; white-space: nowrap; width: 100%;">
         <thead class="table-success">
           <tr>
-            <th>Data/Hora</th>
+            <th>Data</th>
+            <th>Falta</th>
+            <th>Restabelecimento</th>
             <th>Chamado</th>
             <th>Status</th>
             <th>Localidade</th>
             <th>N° Medidor</th>
             <th>UC/Instalação</th>
-            <th>Responsável pela ligação</th>
+            <th>Responsável</th>
             <th>Descrição</th>
             <th>Ações</th>
           </tr>
@@ -193,7 +200,9 @@
         <tbody>
           {% for row in chamados %}
           <tr data-localidade="{{ row['localidade'] }}">
-              <td>{{ row['data_hora'] }}</td>
+              <td>{{ row['data_ocorrencia'] }}</td>
+              <td>{{ row['hr_inicio'] }}</td>
+              <td>{{ row['hr_fim'] }}</td>
               <td>{{ row['chamado'] }}</td>
               <td>{{ row['status'] }}</td>
               <td>{{ row['localidade'] }}</td>
@@ -203,7 +212,7 @@
               <td>{{ row['descricao'] }}</td>
               <td>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEditar{{ row['id'] }}">
-                  Modificar status
+                  status
                 </button>
                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalExcluir{{ row['id'] }}">
                   Excluir

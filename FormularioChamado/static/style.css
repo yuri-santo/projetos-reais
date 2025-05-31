@@ -11,6 +11,7 @@ body {
     margin: 0;
     background: linear-gradient(to bottom, var(--azul) 15%, var(--branco) 50%, var(--verde) 90%);
     margin: 0;
+    padding: 0;
     font-family: Arial, sans-serif;
 }
 

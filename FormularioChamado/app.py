@@ -27,17 +27,19 @@ def init_db():
     conn = get_db_connection()
     conn.execute('''
         CREATE TABLE IF NOT EXISTS chamados (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            data_hora TEXT,
-            chamado TEXT,
-            localidade TEXT,
-            n_medidor TEXT,
-            uc_instalacao TEXT,
-            responsavel TEXT,
-            descricao TEXT,
-            status TEXT
-        )
-    ''')
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        data_ocorrencia DATE,
+        hr_inicio TIME,
+        hr_fim TIME,
+        chamado TEXT,
+        localidade TEXT,
+        n_medidor TEXT,
+        uc_instalacao TEXT,
+        responsavel TEXT,
+        descricao TEXT,
+        status TEXT DEFAULT 'Aberto'
+    )
+''')
     conn.commit()
     conn.close()
 
@@ -49,27 +51,32 @@ def index():
 
     if request.method == "POST":
         chamado = request.form.get("chamado")
-        horario = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        data_ocorrencia = request.form.get("data_ocorrencia")       # Data e hora do chamado
+        hr_inicio = request.form.get("hr_inicio")       # Hora início
+        hr_fim = request.form.get("hr_fim")             # Hora fim
         localidade = request.form.get("localidade")
         n_medidor = request.form.get("n_medidor")
         uc_instalacao = request.form.get("uc_instalacao")
         responsavel = request.form.get("responsavel")
         descricao = request.form.get("descricao")
-        status = request.form.get("status")
+        status = "Aberto"
 
         conn.execute('''
             INSERT INTO chamados (
-                data_hora, chamado, localidade, n_medidor,
-                uc_instalacao, responsavel, descricao, status
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (horario, chamado, localidade, n_medidor, uc_instalacao, responsavel, descricao, status))
+                data_ocorrencia, chamado, localidade, n_medidor,
+                uc_instalacao, responsavel, descricao, status,
+                hr_inicio, hr_fim
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (data_ocorrencia, chamado, localidade, n_medidor, uc_instalacao,
+              responsavel, descricao, status, hr_inicio, hr_fim))
+
         conn.commit()
         conn.close()
+
         registrar_log('Inserção', f'Chamado inserido: "{chamado}" em {localidade}, medidor {n_medidor}, status {status}')
         return redirect(url_for('index', success='create'))
 
     success = request.args.get('success')
-    
 
     chamados = conn.execute('SELECT * FROM chamados').fetchall()
 
@@ -83,7 +90,7 @@ def index():
         success=success,
         localidades=[row['localidade'] for row in localidades],
         status=[row['status'] for row in status],
-        chamados=chamados,  
+        chamados=chamados,
         now=datetime.now()
     )
 
