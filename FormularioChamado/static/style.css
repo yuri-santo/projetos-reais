@@ -47,6 +47,11 @@ body {
   animation: slideDown 0.4s ease-in-out;
 }
 
+.no-results td {
+    font-style: italic;
+    background-color: #f8f9fa !important;
+}
+
 header.epr {
   color: var(--branco);
 }
@@ -79,12 +84,6 @@ label.text_filtro {
   color: var(--azul) !important;
 }
 
-
-
-#tabelaChamados {
-  background-color: var(--azul);
-  color: var(--azul);
-}
 
 
 .table th, .table td {

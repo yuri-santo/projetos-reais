@@ -180,8 +180,8 @@
               <option value="Fechado">Fechado</option>
           </select>
       </div>
-
-      <div class="col-md-4 d-flex align-items-end">
+    </div>
+    <div class="col-md-4 d-flex align-items-end ms-auto justify-content-end">
           <button class="btn btn-success me-2" onclick="exportarExcel()">
               <i class="bi bi-file-excel"></i> Exportar Filtrados
           </button>
@@ -189,9 +189,8 @@
               <i class="bi bi-file-excel"></i> Exportar Todos
           </a>
       </div>
-    </div>
 
-    <div class="table-responsive" style="overflow-x: auto;">
+    <div class="table-responsive" style="display: none; overflow-x: auto;">
       <table class="table table-bordered table-striped" id="tabelaChamados" style="display: none; white-space: nowrap; width: 100%;">
         <thead class="table-success">
           <tr>
@@ -329,35 +328,55 @@
     }
 
     function filtrarChamado() {
-        const filtroLocalidade = document.getElementById("filtroChamado").value;
-        const filtroStatus = document.getElementById("filtroStatus").value;
-        const tabela = document.getElementById("tabelaChamados");
-        const linhas = tabela.querySelectorAll("tbody tr");
+    const filtroLocalidade = document.getElementById("filtroChamado").value;
+    const filtroStatus = document.getElementById("filtroStatus").value;
+    const tabela = document.getElementById("tabelaChamados");
+    const linhas = tabela.querySelectorAll("tbody tr");
+    const divTabela = document.querySelector(".table-responsive");
 
-        let temResultados = false;
+    let temResultados = false;
 
-        linhas.forEach((linha) => {
-            const localidade = linha.getAttribute("data-localidade");
-            const status = linha.querySelector("td:nth-child(5)").textContent.trim();
+    // Verifica se ao menos um dos filtros foi preenchido
+    const filtroAtivo = filtroLocalidade || filtroStatus;
 
-            const correspondeLocalidade = !filtroLocalidade || localidade === filtroLocalidade;
-            const correspondeStatus = !filtroStatus || status === filtroStatus;
-
-            if (correspondeLocalidade && correspondeStatus) {
-                linha.style.display = "";
-                temResultados = true;
-            } else {
-                linha.style.display = "none";
-            }
-        });
-
-        tabela.style.display = temResultados ? "table" : "none";
+    if (!filtroAtivo) {
+        // Nenhum filtro selecionado: oculta a div e tabela
+        divTabela.style.display = "none";
+        tabela.style.display = "none";
+        return;
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById("tabelaChamados").style.display = "table";
+    linhas.forEach((linha) => {
+        const localidade = linha.getAttribute("data-localidade");
+        const status = linha.querySelector("td:nth-child(5)").textContent.trim();
+
+        const correspondeLocalidade = !filtroLocalidade || localidade === filtroLocalidade;
+        const correspondeStatus = !filtroStatus || status === filtroStatus;
+
+        if (correspondeLocalidade && correspondeStatus) {
+            linha.style.display = "";
+            temResultados = true;
+        } else {
+            linha.style.display = "none";
+        }
     });
-</script>
+
+    if (temResultados) {
+        divTabela.style.display = "block"; // mostra a div
+        tabela.style.display = "table";    // mostra a tabela
+    } else {
+        divTabela.style.display = "none";  // esconde a div se nenhum resultado
+        tabela.style.display = "none";     // esconde a tabela
+    }
+  }
+
+  // No carregamento da página, a tabela e a div continuam escondidas
+  document.addEventListener('DOMContentLoaded', function() {
+      document.querySelector(".table-responsive").style.display = "none";
+      document.getElementById("tabelaChamados").style.display = "none";
+  });
+
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -27,3 +27,7 @@
 [2025-05-31 18:55:36] Host: DESKTOP-4SSGIED | Operação: Inserção | status: Chamado inserido: "teste 2 " em BSO - 01, medidor GMI064000091, status Aberto
 [2025-05-31 18:55:41] Host: DESKTOP-4SSGIED | Operação: Exportação | status: Dados exportados para Excel com filtros: localidade=PP - 10, status=None
 [2025-05-31 18:55:51] Host: DESKTOP-4SSGIED | Operação: Exportação | status: Dados exportados para Excel com filtros: localidade=None, status=None
+[2025-06-01 08:23:25] Host: DESKTOP-4SSGIED | Operação: Deleção | status: Chamado ID 4 deletado: "teste"
+[2025-06-01 08:23:43] Host: DESKTOP-4SSGIED | Operação: Deleção | status: Chamado ID 5 deletado: "teste 2 "
+[2025-06-01 09:13:10] Host: DESKTOP-4SSGIED | Operação: Exportação | status: Dados exportados para Excel com filtros: localidade=PP03, status=None
+[2025-06-01 09:13:31] Host: DESKTOP-4SSGIED | Operação: Exportação | status: Dados exportados para Excel com filtros: localidade=None, status=None
