@@ -7,7 +7,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-  <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo_max.png') }}">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo.png') }}">
 </head>
 <body>
   <header class="epr">
@@ -80,31 +80,10 @@
           <label for="localidade" class="form-label">Localidade</label>
           <select class="form-select" id="localidade" name="localidade" required>
             <option value="" disabled selected>Selecione</option>
-            <option value="PP - 01">PP - 01</option>
-            <option value="PP - 10">PP - 10</option>
-            <option value="PP - 11">PP - 11</option>
-            <option value="BSO - 01">BSO - 01</option>
-            <option value="SAU - 18">SAU - 18</option>
-            <option value="SAU - 19">SAU - 19</option>
-            <option value="SAU - 20">SAU - 20</option>
-            <option value="SAU - 21">SAU - 21</option>
-            <option value="Balança  Carandaí">Balança  Carandaí</option>
-            <option value="RPT - 13">RPT - 13</option>
-            <option value="RPT - 14">RPT - 14</option>
-            <option value="RPT - 15">RPT - 15</option>
-            <option value="RPT - 16">RPT - 16</option>
-            <option value="RPT - 18">RPT - 18</option>
-            <option value="RPT- 17Corr almeida">Corralmeida</option>
-            <option value="RDATA 14.1">RDATA 14.1</option>
-            <option value="RDATA 14.2">RDATA 14.2</option>
-            <option value="RDATA 14.3">RDATA 14.3</option>
-            <option value="RDATA 16.1">RDATA 16.1</option>
-            <option value="RDATA 17">RDATA 17</option>
-            <option value="RDATA 18">RDATA 18</option>
-            <option value="RDATA - PP10">RDATA - PP10</option>
-            <option value="PMV - 07">PMV - 07</option>
-            <option value="PMV - 08">PMV - 08</option>
-            <option value="PMV - 09">PMV - 09</option>
+            <option value="XX - XX">XX - XX</option>
+            <option value="XX - XX">XX - XX</option>
+            <option value="XX - XX">XX - XX</option>
+            <option value="XX - XX">XX - XX</option>
           </select>
         </div>
 
@@ -113,13 +92,7 @@
           <select class="form-select" id="n_medidor" name="n_medidor" required>
             <option value="" disabled selected>Selecione</option>
             {% for medidor in [
-              "GMG126000404", "GMI064000091", "GMJ155000344", "ARC164006153",
-              "APD167055614", "CAA137000001", "APD167028493", "APD159029525",
-              "ARB145005973", "APD159004232", "APD167055651", "AJK134033756",
-              "APC149056194", "APD159056317", "APD175093880", "APD142057967",
-              "APD159025558", "APD159124025", "APD142013904", "APD159067285",
-              "APD1590563227", "APD159070514", "APD159095218", "APD159038825",
-              "AJK134033824", "AJK134032068"
+              "XXXXXXXXXX", "############", "###########", "**************"
             ] %}
             <option value="{{ medidor }}">{{ medidor }}</option>
             {% endfor %}
@@ -131,11 +104,7 @@
           <select class="form-select" id="uc_instalacao" name="uc_instalacao" required>
             <option value="" disabled selected>Selecione</option>
             {% for uc in [
-              "3003271107", "3012424498", "3012561397", "3012569128", "3012570697", "3012573851",
-              "3012586666", "3012588531", "3012656251", "3012667837", "3012699982", "3012712558",
-              "3012712647", "3012724708", "3012724735", "3012724772", "3012730204", "3012740719",
-              "3012757198", "3012795862", "3012917317", "3012926204", "3012975588", "3012991579",
-              "3013057398", "3013190398", "3013653187"
+              "XXXXXXXXXX", "############", "###########", "**************"
             ] %}
             <option value="{{ uc }}">{{ uc }}</option>
             {% endfor %}
