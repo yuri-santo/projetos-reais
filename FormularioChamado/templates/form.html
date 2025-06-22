@@ -7,12 +7,12 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-  <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo.png') }}">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo.ico') }}">
 </head>
 <body>
   <header class="epr">
     <div class="position-relative text-center my-4">
-      <img src="{{ url_for('static', filename='img/logo_max.png') }}" alt="Logo da empresa" class="position-absolute top-0 start-0 img-fluid logo-empresa ms-3 mt-2">
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo da empresa" class="position-absolute top-0 start-0 img-fluid logo-empresa ms-3 mt-2">
       <h2 class="mb-0">Formulário de acompanhamento de chamado da CEMIG</h2>
       
     </div>
@@ -30,8 +30,8 @@
               Chamado criado com sucesso!
             {% elif success == 'edit' %}
               Chamado editado com sucesso!
-            {% elif success == 'delete' %}
-              Chamado excluído com sucesso!
+            {% elif success == 'cancelado' %}
+              Chamado cancelado com sucesso!
             {% endif %}
           </div>
           <div class="modal-footer">
@@ -58,17 +58,17 @@
       <form method="POST" action="/" class="row g-3" id="formChamado">
         <div class="col-md-6">
           <label for="data_ocorrencia" class="form-label">Data</label>
-          <input type="text" class="form-control" id="data_ocorrencia" name="data_ocorrencia" placeholder="DD-MM-YYYY" required />
+          <input type="date" class="form-control" id="data_ocorrencia" name="data_ocorrencia" placeholder="DD-MM-YYYY" required />
         </div>
 
         <div class="col-md-6">
           <label for="hr_inicio" class="form-label">Horário do início da Falta de energia</label>
-          <input type="text" class="form-control" id="hr_inicio" name="hr_inicio" placeholder="HH:MM:SS" required />
+          <input type="time" class="form-control" id="hr_inicio" name="hr_inicio" placeholder="HH:MM:SS" required />
         </div>
 
         <div class="col-md-6">
           <label for="hr_fim" class="form-label">Horário do restabelecimento da energia</label>
-          <input type="text" class="form-control" id="hr_fim" name="hr_fim" placeholder="HH:MM:SS" required />
+          <input type="time" class="form-control" id="hr_fim" name="hr_fim" placeholder="HH:MM:SS"/>
         </div>
 
         <div class="col-md-6">
@@ -80,10 +80,10 @@
           <label for="localidade" class="form-label">Localidade</label>
           <select class="form-select" id="localidade" name="localidade" required>
             <option value="" disabled selected>Selecione</option>
-            <option value="XX - XX">XX - XX</option>
-            <option value="XX - XX">XX - XX</option>
-            <option value="XX - XX">XX - XX</option>
-            <option value="XX - XX">XX - XX</option>
+            <option value="@@">@@</option>
+            <option value="**">**</option>
+            <option value="##">##</option>
+            <option value="XX">XX</option>
           </select>
         </div>
 
@@ -92,7 +92,7 @@
           <select class="form-select" id="n_medidor" name="n_medidor" required>
             <option value="" disabled selected>Selecione</option>
             {% for medidor in [
-              "XXXXXXXXXX", "############", "###########", "**************"
+              "@@", "**", "##", "XX"
             ] %}
             <option value="{{ medidor }}">{{ medidor }}</option>
             {% endfor %}
@@ -104,7 +104,7 @@
           <select class="form-select" id="uc_instalacao" name="uc_instalacao" required>
             <option value="" disabled selected>Selecione</option>
             {% for uc in [
-              "XXXXXXXXXX", "############", "###########", "**************"
+              "@@", "**", "##", "XX"
             ] %}
             <option value="{{ uc }}">{{ uc }}</option>
             {% endfor %}
@@ -134,11 +134,12 @@
           <label for="filtroChamado" class="form-label text_filtro">Filtrar por Localidade:</label>
           <select id="filtroChamado" class="form-select" onchange="filtrarChamado()">
               <option value="" selected>Todos</option>
-              {% for loc in localidades %}
-                  <option value="{{ loc }}">{{ loc }}</option>
-              {% endfor %}
-          </select>
-      </div>
+              <option value="@@">@@</option>
+              <option value="**">**</option>
+              <option value="##">##</option>
+              <option value="XX">XX</option>
+            </select>
+          </div>
 
       <div class="col-md-4">
           <label for="filtroStatus" class="form-label text_filtro">Filtrar por Status:</label>
@@ -147,8 +148,14 @@
               <option value="Aberto">Aberto</option>
               <option value="Em Andamento">Em Andamento</option>
               <option value="Fechado">Fechado</option>
+			  <option value="cancelado">Cancelado</option>
           </select>
       </div>
+	  
+	  <div class="col-md-4">
+		  <label for="filtroData" class="form-label text_filtro">Filtrar por Data Ocorrência:</label>
+		  <input type="date" id="filtroData" class="form-control" value="{{ data_ocorrencia }}" onchange="filtrarChamado()" />
+		</div>
     </div>
     <div class="col-md-4 d-flex align-items-end ms-auto justify-content-end">
           <button class="btn btn-success me-2" onclick="exportarExcel()">
@@ -194,7 +201,7 @@
                   status
                 </button>
                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalExcluir{{ row['id'] }}">
-                  Excluir
+                  cancelar
                 </button>
               </td>
           </tr>
@@ -210,6 +217,15 @@
                     <label>Chamado:</label>
                     <input type="text" name="chamado" value="{{ row['chamado'] }}" class="form-control mb-2" readonly>
 
+                    <label>Data:</label>
+                    <input type="text" name="data_ocorrencia" value="{{ row['data_ocorrencia'] }}" class="form-control mb-2" readonly>
+
+                    <label>Falta:</label>
+                    <input type="text" name="hr_inicio" value="{{ row['hr_inicio'] }}" class="form-control mb-2" readonly>
+
+                    <label>Restabelecimento:</label>
+                    <input type="text" name="hr_fim" value="{{ row['hr_fim'] }}" class="form-control mb-2">
+
                     <label>Localidade:</label>
                     <input type="text" name="localidade" value="{{ row['localidade'] }}" class="form-control mb-2" readonly>
 
@@ -223,7 +239,7 @@
                     <input type="text" name="responsavel" value="{{ row['responsavel'] }}" class="form-control mb-2" readonly>
 
                     <label>Descrição:</label>
-                    <textarea name="descricao" class="form-control mb-2"readonly>{{ row['descricao'] }}</textarea>
+                    <textarea name="descricao" class="form-control mb-2">{{ row['descricao'] }}</textarea>
 
                     <label for="status">Status:</label>
                     <select name="status" id="status" class="form-control mb-3">
@@ -242,26 +258,29 @@
           <div class="modal fade" id="modalExcluir{{ row['id'] }}" tabindex="-1" aria-labelledby="modalExcluirLabel{{ row['id'] }}" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content modal-content-glass">
-
                 <div class="modal-header">
-                  <h5 class="modal-title" id="modalExcluirLabel{{ row['id'] }}">Confirmar Exclusão</h5>
+                  <h5 class="modal-title" id="modalExcluirLabel{{ row['id'] }}">Confirmar cancelamento</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                 </div>
 
                 <div class="modal-body text-center fw-bold text-danger fs-5">
-                  Tem certeza que deseja excluir o chamado <br>"<span class="text-white"> {{ row['chamado'] }} </span>"?
+                  Tem certeza que deseja cancelar o chamado <br>
+                  "<span class="text-white"> {{ row['chamado'] }} </span>"?
                 </div>
 
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                  <form method="post" action="{{ url_for('deletar_chamado', id=row['id']) }}">
-                    <button type="submit" class="btn btn-danger">Excluir</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+                  <form method="POST" action="{{ url_for('deletar_chamado', id=row['id']) }}" style="display:inline;">
+                    <button type="submit" class="btn btn-secondary" onclick="return confirm('Confirma cancelar o chamado?');">Cancelar</button>
                   </form>
                 </div>
-                {% endfor %}
               </div>
             </div>
           </div>
+
+          {% endfor %}
+
+
           
         </tbody>
       </table>
@@ -270,46 +289,71 @@
   </main>
 
   <footer class="text-center py-3">
-    <span class="text-muted">Grupo EPR <br> Via Mineira <br> © {{ now.year }}</span>
+    <span class="text-muted">Empresa<br> © {{ now.year }}</span>
   </footer>
 
+<script>
 
- <script>
-  function exportarExcel() {
-        const filtroLocalidade = document.getElementById("filtroChamado").value;
-        const filtroStatus = document.getElementById("filtroStatus").value;
-        
-        let url = "{{ url_for('exportar_excel') }}";
-        let params = [];
-        
-        if (filtroLocalidade) {
-            params.push(`localidade=${encodeURIComponent(filtroLocalidade)}`);
-        }
-        if (filtroStatus) {
-            params.push(`status=${encodeURIComponent(filtroStatus)}`);
-        }
-        
-        if (params.length > 0) {
-            url += "?" + params.join("&");
-        }
-        
-        window.location.href = url;
+const amarracao = {
+    "@@": { "n_medidor": "@@", "uc_instalacao": "@@" },
+    "**": { "n_medidor": "**", "uc_instalacao": "**" },
+    "##": { "n_medidor": "##", "uc_instalacao": "##" },
+    "XX": { "n_medidor": "XX", "uc_instalacao": "XX" },
+    
+};
+
+document.getElementById("localidade").addEventListener("change", function() {
+    const local = this.value;
+    const n_medidor = document.getElementById("n_medidor");
+    const uc_instalacao = document.getElementById("uc_instalacao");
+
+    if (amarracao[local]) {
+        n_medidor.innerHTML = `<option value="${amarracao[local].n_medidor}">${amarracao[local].n_medidor}</option>`;
+        uc_instalacao.innerHTML = `<option value="${amarracao[local].uc_instalacao}">${amarracao[local].uc_instalacao}</option>`;
+    } else {
+        n_medidor.innerHTML = `<option value="">Selecione</option>`;
+        uc_instalacao.innerHTML = `<option value="">Selecione</option>`;
     }
+});
 
-    function filtrarChamado() {
+function exportarExcel() {
     const filtroLocalidade = document.getElementById("filtroChamado").value;
     const filtroStatus = document.getElementById("filtroStatus").value;
+    const filtroData = document.getElementById("filtroData").value;
+
+    let url = "{{ url_for('exportar_excel') }}";
+    let params = [];
+
+    if (filtroLocalidade) {
+        params.push(`localidade=${encodeURIComponent(filtroLocalidade)}`);
+    }
+    if (filtroStatus) {
+        params.push(`status=${encodeURIComponent(filtroStatus)}`);
+    }
+    if (filtroData) {
+        params.push(`data_ocorrencia=${encodeURIComponent(filtroData)}`);
+    }
+
+    if (params.length > 0) {
+        url += "?" + params.join("&");
+    }
+
+    window.location.href = url;
+}
+
+function filtrarChamado() {
+    const filtroLocalidade = document.getElementById("filtroChamado").value;
+    const filtroStatus = document.getElementById("filtroStatus").value;
+    const filtroData = document.getElementById("filtroData").value;
     const tabela = document.getElementById("tabelaChamados");
     const linhas = tabela.querySelectorAll("tbody tr");
     const divTabela = document.querySelector(".table-responsive");
 
     let temResultados = false;
 
-    // Verifica se ao menos um dos filtros foi preenchido
-    const filtroAtivo = filtroLocalidade || filtroStatus;
+    const filtroAtivo = filtroLocalidade || filtroStatus || filtroData;
 
     if (!filtroAtivo) {
-        // Nenhum filtro selecionado: oculta a div e tabela
         divTabela.style.display = "none";
         tabela.style.display = "none";
         return;
@@ -318,11 +362,13 @@
     linhas.forEach((linha) => {
         const localidade = linha.getAttribute("data-localidade");
         const status = linha.querySelector("td:nth-child(5)").textContent.trim();
+        const data_ocorrencia = linha.querySelector("td:nth-child(1)").textContent.trim(); 
 
         const correspondeLocalidade = !filtroLocalidade || localidade === filtroLocalidade;
         const correspondeStatus = !filtroStatus || status === filtroStatus;
+        const correspondeData = !filtroData || data_ocorrencia === filtroData;
 
-        if (correspondeLocalidade && correspondeStatus) {
+        if (correspondeLocalidade && correspondeStatus && correspondeData) {
             linha.style.display = "";
             temResultados = true;
         } else {
@@ -331,21 +377,21 @@
     });
 
     if (temResultados) {
-        divTabela.style.display = "block"; // mostra a div
-        tabela.style.display = "table";    // mostra a tabela
+        divTabela.style.display = "block";
+        tabela.style.display = "table";
     } else {
-        divTabela.style.display = "none";  // esconde a div se nenhum resultado
-        tabela.style.display = "none";     // esconde a tabela
+        divTabela.style.display = "none";
+        tabela.style.display = "none";
     }
-  }
+}
 
-  // No carregamento da página, a tabela e a div continuam escondidas
-  document.addEventListener('DOMContentLoaded', function() {
-      document.querySelector(".table-responsive").style.display = "none";
-      document.getElementById("tabelaChamados").style.display = "none";
-  });
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelector(".table-responsive").style.display = "none";
+    document.getElementById("tabelaChamados").style.display = "none";
+});
 
-  </script>
+</script>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
