@@ -1,2 +1,0 @@
-[2025-06-22 09:26:41] Host: VMBH-NB-J9X0344 | Usuário: yuri.santos | Operação: Inserção | status: Chamado inserido: "teste" em @@, medidor @@, status Aberto
-[2025-06-22 10:38:38] Host: SAITAMA-NB | Usuário: yuri | Operação: Inserção | status: Chamado inserido: "teste" em @@, medidor @@, status Aberto
